@@ -5,7 +5,7 @@ import csv
 
 
 def getdata():
-    try:
+  try:
         # URL = "https://www.cricbuzz.com/cricket-series/3472/indian-premier-league-2021/matches"
 
         # r = requests.get(URL)
@@ -16,6 +16,7 @@ def getdata():
         team1=0
         nteam1=0
         nteam2=0
+        datatocompare=getdatetimedata()
         matchesm = {}
         matchesm["data"] = []
         matchesm["next"] = []
@@ -36,6 +37,7 @@ def getdata():
                         matchm['team1']=team1
                         matchm['team2']=team2
                         matchm['matchst']=0
+                        
 
                         
                         
@@ -43,6 +45,8 @@ def getdata():
                                 nextmatchlink1 = link
                                 nteam1=team1
                                 nteam2=team2
+                        else:
+                            matchm['date'] = search(datatocompare,row.span.text)
 
                         team1=0
                         team2=0
@@ -61,17 +65,25 @@ def getdata():
         matchnext['nextmatchlink'] = nextmatchlink1
         matchnext['nteam1'] = nteam1
         matchnext['nteam2'] = nteam2
-        
+        search(datatocompare,nextmatchlink1)
         try:
                 matchesm["next"].append(matchnext)
         except Exception as e:
                 pass
         return matchesm
-        # print(matchesm)
+        #print(search(datatocompare,nextmatchlink1))
 
-    except Exception as e:
-                # print('dddd')
-        return {"status": False, "error": e}
+  except Exception as e:
+                 print(e)
+        # return {"status": False, "error": e}
+
+def search(values, searchFor):
+    for k in values:
+        for v in values[k]:
+            if v['string'] in searchFor: 
+                 return v['date']
+            
+
 def getteam(stringcomp,team1):
         if "Rajasthan" in stringcomp: 
                 if(team1!=1):
@@ -97,3 +109,34 @@ def getteam(stringcomp,team1):
         if "Kolkata" in stringcomp: 
            if(team1!=8):
                 return 8
+def getdatetimedata():
+    try:
+            
+        getdatetimeurl = requests.get(
+                    "https://www.espncricinfo.com/series/ipl-2021-1249214/match-schedule-fixtures").text
+        getdatetimesoup = BeautifulSoup(getdatetimeurl, "lxml")
+        getdatetimetable = getdatetimesoup.find('div', attrs={
+                    'class': 'card content-block league-scores-container'})
+        getdatetimematchm = {}
+        getdatetimematchm['data'] = []
+
+        for getdatetimerow in getdatetimetable.findAll('div',
+                                    attrs={'class': 'col-md-8 col-16'}):
+                #print(row.find('div',attrs={'class':'status'}).text)
+            #    for rr in row.findAll('div',attrs={'class':'team'}):
+            #      print(rr.text)
+
+                    getdatetimett=getdatetimerow.find('div',attrs={'class':'match-info match-info-FIXTURES'})
+                    getdatetimenh=getdatetimett.find('div',attrs={'class':'description'}).text
+                    getdatematchm = {}
+                    getdatematchm['string'] = getdatetimenh[:10]
+                    getdatematchm['date'] = getdatetimerow.find('div',attrs={'class':'status'}).text
+                    getdatetimematchm['data'].append(getdatematchm)
+                
+
+        
+        return getdatetimematchm
+    
+    except Exception as e:
+                    pass
+            
