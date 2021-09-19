@@ -45,8 +45,8 @@ def getdata():
                                 nextmatchlink1 = link
                                 nteam1=team1
                                 nteam2=team2
-                        else:
-                            matchm['date'] = search(datatocompare,row.span.text)
+                        #else:
+                            #matchm['date'] = search(datatocompare,row.span.text)
 
                         team1=0
                         team2=0
