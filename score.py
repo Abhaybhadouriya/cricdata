@@ -65,7 +65,6 @@ def getdata():
         matchnext['nextmatchlink'] = nextmatchlink1
         matchnext['nteam1'] = nteam1
         matchnext['nteam2'] = nteam2
-        search(datatocompare,nextmatchlink1)
         try:
                 matchesm["next"].append(matchnext)
         except Exception as e:
