@@ -125,7 +125,7 @@ def getdatetimedata():
             #    for rr in row.findAll('div',attrs={'class':'team'}):
             #      print(rr.text)
 
-                    getdatetimett=getdatetimerow.find('div',attrs={'class':'match-info match-info-FIXTURES'})
+                    getdatetimett=getdatetimerow.find('a',attrs={'class':'match-info-link-FIXTURES'})
                     getdatetimenh=getdatetimett.find('div',attrs={'class':'description'}).text
                     getdatematchm = {}
                     getdatematchm['string'] = getdatetimenh[:10]
